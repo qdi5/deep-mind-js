@@ -3,7 +3,7 @@
   let jQuery = function() {
     return new jQuery.prototype.init()
   }
-  jQuery.prototype = {
+  jQuery.fn = jQuery.prototype = {
     init: function () {
       console.log('这里是初始化方法')
     },
@@ -11,6 +11,6 @@
       console.log('这里是css方法')
     }
   }
-  jQuery.prototype.init.prototype = jQuery.prototype
+  jQuery.fn.init.prototype = jQuery.fn
   root.$ = root.jQuery = jQuery
  })(this);

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>jQuery extend实现</title>
+</head>
+<body>
+  <script src="../../jquery.3.4.1.js"></script>
+  <!-- <script src="jquery.0.1.1.js"></script> -->
+  <script>
+    // jquery extend的用法;
+    /*
+      有多个参数时，将把从第二个开始的所有对象的属性扩展给第一个对象，相同则覆盖
+    
+    
+    */
+
+    // 1、扩展任意对象
+      // 1.1、实现对象的浅拷贝
+      let person = {
+        name: '小明',
+        age: 27
+      }
+
+      let newObj = {
+        gander: '男'
+      }
+
+      let newObj2 = {
+        position: 'IT',
+        age: 18,
+        workHard: function () {
+          console.log('努力工作，哈哈！！！')
+          return true
+        },
+        list: {
+          salary: 15000,
+          dream: 'frontend CTO',
+          wife: true
+        }
+      }
+      $.extend(person, newObj, newObj2)
+      console.log('person:', person)
+      console.log('是浅拷贝吗？ ', person.workHard === newObj2.workHard)
+      
+      // 1.2、实现对象的深拷贝
+      let newPerson = {
+        name: '小华',
+        age: 28,
+        gander: '女'
+      }
+      $.extend(true, newPerson, newObj2)
+      console.log('person:', newPerson)
+      console.log('是深拷贝吗？ ', newPerson.list !== newObj2.list)
+
+    // 2、扩展jquery对象本身
+    $.extend({
+      wz: '码农',
+      wuzhe: function() {
+        console.log('我是一名小码农')
+        return '你知道吗，你很了不起'
+      }
+    })
+    console.log($.wz, $.wuzhe())
+    
+    // 3、扩展jquery的实例对象
+    $.fn.extend({
+      work: function () {
+        console.log('work hard')
+        return '努力工作，好好赚钱'
+      }
+    })
+
+    console.log($().work())
+  </script>
+</body>
+</html>
