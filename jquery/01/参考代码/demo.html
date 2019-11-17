@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<script type="text/javascript" src="jQuery.1.0.0.js"></script>
+	<script type="text/javascript">
+		//   浅拷贝     深拷贝
+		var obj = {name:"max" , list:{work:function(){}} }
+		var result = {age: "30", sex:"男", list:{css1:function(){}}}
+		//任意对象扩展
+		$.extend( true, obj, result );    //参数1 扩展的对象  参数2 遍历
+		   console.log(obj)
+     //深拷贝  
+     //{css1:function(){}} + {work:function(){}}  =合并 obj.list   浅拷贝
+     //{}   []  obj.list
+     //{css1:function(){},work:function(){}}
+     //
+     //
+     //{work:function(){}}    obj.list
+
+       //jQuery本身扩展
+		$.extend({
+			work:function(){
+				console.log("老司机带带我")
+			}
+		});
+		console.log($.work())
+       /*
+		//jQuery实例对象扩展
+		$.fn.extend({
+			css1:function(){
+				console.log("css1")
+			}
+		});
+		console.log($().css1())
+		
+	
+		
+		1：任意对象扩展
+		继承 （扩展）      浅拷贝   深拷贝  
+
+		2：jQuery本身扩展
+
+		3：  jQuery实例对象扩展
+
+		function Person(){
+           
+		}
+
+		Person.prototype = {  //原型对象
+              name: "star"
+		}
+
+		var max = new Person();
+
+		console.log(max.name)
+
+		console.log(max.__proto__ == Person.prototype)
+
+		Person()   === new Person()    //普通函数
+*/
+
+
+
+
+		//1: new 自定义构造函数(); 创建一个object对象
+		//2：调用构造函数
+		//3：给创建的object对象  构建原型链的关系  ___proto__ 赋值
+		//
+		//$别名    jQuery 本身 Person 构造函数
+		//$()    语法糖的封装   创建jquery实例对象
+		//
+		//
+		//init  构造函数  ？  es5   函数对象
+
+    let newPerson = {
+      name: '小华',
+      age: 28,
+      gander: '女'
+    }
+    let newObj2 = {
+      position: 'IT',
+      age: 18,
+      workHard: function () {
+        console.log('努力工作，哈哈！！！')
+        return true
+      },
+      list: {
+        salary: 15000,
+        dream: 'frontend CTO',
+        wife: true,
+        test: {
+          deepProp: true
+        },
+        ary: [
+          1,'12',{test: 'haha'}, [{test: 'haha2'}, {test: 'haha3'}]
+        ]
+      }
+    }
+    //debugger
+    $.extend(true, newPerson, newObj2)
+    console.log('person:', newPerson)
+    console.log('是深拷贝吗？ ', newPerson.list !== newObj2.list)
+	</script>
+</body>
+</html>
