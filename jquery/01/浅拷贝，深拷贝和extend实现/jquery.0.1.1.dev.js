@@ -21,10 +21,11 @@
     // 拷贝的对象是否是数组
     let copyIsArray = false
     if (length === 1) {
-      target = arguments[0]
-      for (let attr in target) {
-        if (typeof target[attr] !== 'undefined') {
-          jQuery[attr] = target[attr]
+      target = this
+      let extendObj = arguments[0]
+      for (let attr in extendObj) {
+        if (typeof extendObj[attr] !== 'undefined') {
+          target[attr] = extendObj[attr]
         }
       }
     } else {
@@ -42,7 +43,7 @@
               ) {
                 if (copyIsArray) {
                   // 如果是数组，则遍历数组，将普通值，直接push，引用值，继续使用浅拷贝方法拷贝过来
-                  function dgs(currentValue) {
+                 function dgs(currentValue) {
                     let result = []
                     let obj = {}
                     for (let item of currentValue) {
