@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>jQuery整体设计和extend实现</title>
+</head>
+<body>
+  <h3>1、无new构造</h3>
+  <p>1.1、实现$()得到一个jQuery的实例</p>
+  <h3>2、extend实现</h3>
+  <p>2.1、实现$.extend(a, b)</p>
+  <code>
+    <pre>
+      var a = { a: 1 }
+      var b = { b: 2 }
+      var c = $.extend(a, b) 
+      得到： c = {
+              a: 1,
+              b: 2
+            }
+    </pre>
+  </code>
+  <p>2.2、实现$.extend(a)/$.fn.extend(a)</p>
+  <code>
+    <pre>
+      var a = {
+        work: function () {
+          return '我正在工作'
+        } 
+      }
+      var c = $.fn.extend(a) 
+      执行： $().work() 
+      输出：我正在工作
+    </pre>
+  </code>
+  <p>2.3、实现$.extend(true, a, b)</p>
+  <code>
+    <pre>
+      var a = { a: 1, list: {id: 12, name: 'wuzhe'} }
+      var b = { b: 2, list: {id: 13, age: 18} }
+      var c = $.extend(true, a, b) 
+      得到： c = {
+        a: 1,
+        b: 2,
+        list: {
+          id: 13,
+          name: 'wuzhe',
+          age: 18
+        }
+      }
+    </pre>
+  </code>
+  <script src="jquery.diy.js"></script>
+  <script>
+    var a = { a: 1 }
+    var b = { b: 2 }
+    var c = $.extend(a, b)
+    console.log('c:', c)
+
+    var a = {
+      work: function () {
+        return '我正在工作'
+      } 
+    }
+    var c = $.fn.extend(a) 
+    console.log($().work())
+
+    $.extend(a)
+    console.log($.work())
+
+    var a = { a: 1, list: {id: 12, name: 'wuzhe'} }
+    var b = { b: 2, list: {id: 13, age: 18, tech: ['Vue', 'Javascript', 'html5', 'Css'] }}
+    var c = $.extend(true, a, b) 
+    console.log('c:', c)
+  </script>
+</body>
+</html>
