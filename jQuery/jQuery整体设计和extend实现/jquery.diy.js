@@ -51,27 +51,31 @@
     for (; i < length; i++) {
       var current = arguments[i]
       // 差距  // arguments[i]临界值判断
-      if (jQuery.isPlainObject(current)) {
+      // 这里还不能调用jQuery.isPlainObject，因为isPlainObject还没有扩展到jQuery上
+      if (current !== null) {
         // 当for in循环对象的时候，name是属性名
         // 当for in循环数组的时候，name是索引
         for (name in current) {
           // 需要考虑，被扩展对象target对应的属性值是否是对象或数组，如果是的情况，需要将值赋值给clone
-          var src = target[name]
-          var val = current[name]
-          if (isDeep && (jQuery.isPlainObject(val) || (copyIsArray = jQuery.isArray(val)))) {
+          var src = target[name];
+          var val = current[name];
+          if (
+            isDeep &&
+            (jQuery.isPlainObject(val) || (copyIsArray = jQuery.isArray(val)))
+          ) {
             console.log(copyIsArray);
             if (copyIsArray) {
               //  差距  // src可能为undefined，如果是undefined，直接赋值为[]，减少后续代码运行
-              clone = src && jQuery.isArray(src) ? src : []
+              clone = src && jQuery.isArray(src) ? src : [];
               // 防止后面的循环中，copyIsArray一直是true
-              copyIsArray = false
+              copyIsArray = false;
             } else {
               //  差距  // src可能为undefined，如果是undefined，直接赋值为{}，减少后续代码运行
               clone = src && jQuery.isPlainObject(src) ? src : {};
             }
-            target[name] = jQuery.extend(isDeep, clone, val)
+            target[name] = jQuery.extend(isDeep, clone, val);
           } else {
-            if (typeof val !== 'undefined') {
+            if (typeof val !== "undefined") {
               target[name] = val;
             }
           }
