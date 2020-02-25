@@ -52,6 +52,7 @@
       var current = arguments[i]
       // 差距  // arguments[i]临界值判断
       // 这里还不能调用jQuery.isPlainObject，因为isPlainObject还没有扩展到jQuery上
+      // 所以，这里用个简单的判断
       if (current !== null) {
         // 当for in循环对象的时候，name是属性名
         // 当for in循环数组的时候，name是索引

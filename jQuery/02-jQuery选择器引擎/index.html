@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>jQuery选择器引擎</title>
+</head>
+<body>
+  <script src="jquery.diy.js"></script>
+  <script>
+   function a (a, b) {
+     console.log('将arguments类数组转换为数组：', $.makeArray(arguments))
+   }	
+   a(2, 3)
+   var b = {
+     length: 0
+   }
+   var c = [1,2,3,4,5]
+   var d = $.merge(b, c)
+   console.log(`d:`, d)
+   var e = {'0': 'wu', '1': 'zhe'}
+   var f = $.merge([2, 3, 4], e)
+   console.log('f:', f)
+  </script>
+</body>
+</html>
