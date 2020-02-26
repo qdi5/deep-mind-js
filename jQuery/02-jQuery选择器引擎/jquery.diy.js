@@ -9,12 +9,12 @@
   // \s*(<[\w\W]+>)[^>]* 如果缺少最后的[^>]*，则无法匹配<div>6这种情况
   // \s*(<[\w\W]+>) 匹配以<开头，以及>结尾的整个字符串（中间无论是什么字符都会匹配成功） 
   var rquickExpr = /^(?:\s*(<[\w\W]+>)[^>]*|#([\w-]+))$/
-  var rejectExp = /^<(\w+)\s*\/?>$/
+  var rejectExp = /^<(\w+)\s*\/?>/
   function jQuery(selector, context) {
     return new jQuery.fn.init(selector, context)
   }
   jQuery.prototype = {
-    // length的作用：确保jQuery.merge(this, [])正常运行
+    // length的作用：确保jQuery.merge(this, [])正常运行（这里的this是jQuery的实例对象）
     length: 0,
     init: function (selector, context) {
       // 选择器传入的是字符串的情况
@@ -148,7 +148,6 @@
      * @param {数组，或者是key为数字的对象} second 
      */
     merge: function (first, second) {
-      debugger
       let f = first.length
       let s = second.length
       let j = 0
@@ -170,7 +169,7 @@
         return null
       }
       var parse = rejectExp.exec(data)
-      return context.createElement(parse[1])
+      return [context.createElement(parse[1])]
     }
   })
   window.$ = window.jQuery = jQuery
