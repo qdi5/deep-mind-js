@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>jQuery DOM加载完成</title>
+</head>
+<body>
+  <!-- <script src="../libs/jquery.3.4.1.js"></script> -->
+  <script src="jquery.diy.js"></script>
+  <script>
+   $.each([1,2,3], function(index ,value) {
+    console.log(this, index, value)
+   }, ['wu', 'zhe'])
+
+   $.each({name: 'zys', age: 18, gander: '女'}, function(index ,value) {
+    console.log(this, index, value)
+   }, ['wu', 'zhe'])
+
+
+   $.each({name: 'zys', age: 18, gander: '女'}, function(index ,value) {
+    console.log(this, index, value)
+   })
+
+   $(function() {
+     console.log('回调一', this)
+   })
+
+   $(function() {
+     console.log('回调二', this)
+   })
+
+   $(function() {
+     console.log('回调三', this)
+   })
+  </script>
+</body>
+</html>
