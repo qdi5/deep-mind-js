@@ -59,10 +59,10 @@
       return jQuery.access(this, name, value, function(elem, name, value) {
         if (!jQuery.isUndefined(value)) {
           // set
-          return jQuery.style(elem, name, value)
+          return jQuery.style(elem[0], name, value)
         }
           // get
-        return jQuery.curCss(elem, name, value)
+        return jQuery.curCss(elem[0], name, value)
       })
     },
     text: function (name) {
@@ -70,9 +70,9 @@
       return jQuery.access(this, name, name, function(elem, name) {
         if (!jQuery.isUndefined(name)) {
           // set
-          return jQuery.setText(elem,name)
+          return jQuery.setText(elem[0],name)
         }
-        return jQuery.getText(elem)
+        return jQuery.getText(elem[0])
       })
     }
   }
@@ -269,10 +269,8 @@
      */
     access: function access(elem, name, value, callback) {
       var length = elem.length
-      var isGet = true
       // set 1：形如：$('#box').css('background', 'red')
       if (!jQuery.isUndefined(value)) {
-        isGet = false
         return callback(elem, name, value)
       }
       // set 2：形如：
@@ -284,39 +282,47 @@
          })
        */
       if (jQuery.isPlainObject(name)) {
-        isGet = false
         for (var item in name) {
           access.call(jQuery, elem, item, name[item], callback)
         }
         return elem
       }
 
-      if (length && isGet) {
+      if (length) {
         return callback(elem, name)
       }
     },
     style: function (elem, name, value) {
-      if (elem && elem.length) {
-        elem[0].style[name] = value
+      if (!jQuery.isUndefined(value)) {
+        elem.style[name] = value
       }
       return elem
     },
     curCss: function (elem, name) {
       if (elem && elem.length) {
         if (window.getComputedStyle) {
-          return window.getComputedStyle(elem[0]).getPropertyValue(name)
+          return window.getComputedStyle(elem).getPropertyValue(name)
         }
       }
     },
-    setText (elem, name) {
-      if (elem && elem.length) {
-        elem[0].textContent = name
+    setText (elem, value) {
+      var nodeType = elem.nodeType
+      if (nodeType === 1) {
+        elem.textContent = value
       }
       return elem
     },
     getText (elem) {
-      console.log(elem[0], elem[0].textContent)
-      return elem[0].textContent
+      var nodeType = elem.nodeType
+      /**
+       * 节点类型：
+       *   1代表元素节点
+       *   9代表Document节点 
+       *   11代表DocumentFragment节点
+       */  
+      if (nodeType === 1 || nodeType === 9 || nodeType === 11) {
+        return elem.textContent    
+      }
     }
   })
   rootjQuery = jQuery(document)
