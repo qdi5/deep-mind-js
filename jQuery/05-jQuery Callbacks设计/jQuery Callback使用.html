@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>jQuery Callbacks的使用</title>
+  <style>
+    #box {
+      width: 100px;
+      height: 100px;
+      border: 1px solid purple;
+    }
+    #box {
+      transition: all 0.8s;
+    }
+  </style>
+</head>
+<body>
+  <script src="../libs/jquery.3.4.1.js"></script>
+  <!-- <script src="jquery.diy.js"></script> -->
+  <script>
+    function fn1 (value) {
+      console.log('fn1 says:' + value)
+    }
+    function fn2 (value) {
+      console.log('fn2 says:' + value)
+    }
+    // 默认情况下
+   /*  var callback = $.Callbacks()
+    callback.add(fn1)
+    callback.fire('魔童')
+    callback.add(fn2)
+    callback.fire('敖丙') */
+
+    // once
+    /* var onceCallback = $.Callbacks('once')
+    onceCallback.add(fn1)
+    onceCallback.fire('foo')
+    onceCallback.add(fn2)
+    onceCallback.fire('bar')
+    onceCallback.remove(fn2)
+    onceCallback.fire('foobar') */
+
+    // memory
+    /* var memoryCallback = $.Callbacks('memory')
+    memoryCallback.add(fn1)
+    memoryCallback.fire('foo memory')
+    memoryCallback.add(fn2)
+    memoryCallback.fire('bar memory') */
+
+    function fn3 (val) {
+      console.log(`fn3，${val}`)
+      return false
+    }
+
+    function fn4 (val) {
+      fn3(`fn4 says:${val}`)
+      return false
+    }
+
+    // stopOnFalse
+   /*  var stopOnFalseCallback = $.Callbacks('stopOnFalse')
+    stopOnFalseCallback.add(fn3)
+    stopOnFalseCallback.fire('foo stopOnFalse')
+    stopOnFalseCallback.add(fn4)
+    stopOnFalseCallback.fire('bar stopOnFalse')
+    stopOnFalseCallback.remove(fn4)
+    stopOnFalseCallback.fire('foobar stopOnFalse') */
+
+    // unique
+    /* var uniqueCallback = $.Callbacks('unique')
+    uniqueCallback.add(fn1)
+    uniqueCallback.fire('foo unique')
+    uniqueCallback.add(fn1) // 重复添加
+    uniqueCallback.add(fn2)
+    uniqueCallback.fire('bar unique')
+    uniqueCallback.remove(fn2)
+    uniqueCallback.fire('foobar unique') */
+
+    // unique memory
+    var uniMemoryCallback = $.Callbacks('unique memory')
+    uniMemoryCallback.add(fn1)
+    uniMemoryCallback.fire('foo uniMemory')
+    uniMemoryCallback.add(fn1) // 重复添加
+    uniMemoryCallback.add(fn2)
+    uniMemoryCallback.fire('bar uniMemory')
+    uniMemoryCallback.add(fn2) // 重复添加
+    uniMemoryCallback.fire('baz uniMemory')
+    uniMemoryCallback.remove(fn2)
+    uniMemoryCallback.fire('foobar uniMemory')
+  </script>
+</body>
+</html>
