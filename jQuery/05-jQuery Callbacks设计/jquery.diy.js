@@ -12,6 +12,8 @@
   var rejectExp = /^<(\w+)\s*\/?>/
   // 存储Callbacks中控制回调的状态信息
   var optionsCache = {}
+  // 匹配一个或多个空格
+  var spaceExp = /\s+/
   // jQuery内部使用的一个公用实例对象
   var rootjQuery
   function jQuery(selector, context) {
@@ -212,7 +214,7 @@
       // jQuery中，利用length属性来判断对象，还是数组
       var length = target.length
       // 我这里的判断是以数组和对象来判断，
-      // max使用的是context来判断，感觉都差不多
+      // max使用的是context来判断，感觉都差不多???
       if (jQuery.isUndefined(length) && jQuery.isNumber(length)) {
         // 数组的情况
         if (context) {
@@ -327,7 +329,47 @@
       }
     },
     Callbacks: function (options) {
+      // 传入的options不为空且是字符串，则从对象缓存中获取对应的值，或者创建一个
       options = jQuery.isString(options) ? (optionsCache[options] || createOptions(options)) : {}
+      let list = []
+      function fire () {
+        let args = arguments
+        let start = 0
+        let end = list.length
+        /* 
+          使用forEach的缺点：
+          1、不好控制循环退出
+          2、无法设置循环开始的位置
+        list.forEach(function (i, fn) {
+          fn.apply(_this, args)
+        })
+        */
+        for (; start < end; start++) {
+          if (list[start].apply(this, args) === false && options.stopOnFalse === true) {
+            break
+          }
+        }
+      }
+      let self = {
+        // 订阅者
+        add () {
+          let startLength = list.length
+          jQuery.each(arguments, function (i, fn){
+            if (jQuery.isFunction(fn)) {
+              list.push(fn)
+            }
+          })
+          if (options.memory) {
+            start = startLength
+            fire()
+          }
+        },
+        // 发布者
+        fire () {
+          fire()
+        }
+      }
+      return self
     }
   })
   /**
@@ -336,7 +378,13 @@
    * @return { Object } {}
    */
   function createOptions (options) {
-
+    var object = optionsCache[options] = {}
+    // options可能是一个字符串，也有可能是以空格分隔的多个字符串，所以需要分隔
+    jQuery.each(options.split(spaceExp), function (index, item) {
+      // 改变了object，也就改变了optionsCache[options]
+      object[item] = true
+    })
+    return object
   }
   rootjQuery = jQuery(document)
   window.$ = window.jQuery = jQuery

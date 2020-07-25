@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deferred</title>
+</head>
+<body>
+  <script src="../libs/jquery.js"></script>
+  <script>
+    var baseUrl = 'http://api.wuzhe.online'
+    var url = '/article/page/1'
+    var der = $.Deferred()
+    var wait = function (der) {
+      var test = function () {
+        console.log('执行异步操作了，哈哈')
+        der.resolve()
+      }
+      setTimeout(test, 5000)
+      return der
+    }
+    $.when(wait(der)).done(function() {
+      console.log('执行成功')
+    }).fail(function () {
+      console.log('执行失败')
+    }).done(function() {
+      console.log('执行还是成功')
+    })
+  </script>
+</body>
+</html>

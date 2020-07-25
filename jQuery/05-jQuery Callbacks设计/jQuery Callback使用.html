@@ -16,15 +16,30 @@
   </style>
 </head>
 <body>
-  <script src="../libs/jquery.3.4.1.js"></script>
+  <ul>
+    <li>实现顺序调用回调函数</li>
+    <li>实现stopOnFalse</li>
+    <li>实现memory</li>
+    <li>实现组合效果，如once memory</li>
+  </ul>
+  <script src="../libs/jquery.js"></script>
   <!-- <script src="jquery.diy.js"></script> -->
   <script>
     function fn1 (value) {
-      console.log('fn1 says:' + value)
+      console.log('fn1 says:', value)
+      return false
     }
     function fn2 (value) {
-      console.log('fn2 says:' + value)
+      console.log('fn2 says:', value)
     }
+    function fn3 (value) {
+      console.log('fn3 says:', value)
+    }
+    var callback = $.Callbacks('memory')
+    callback.add(fn1)
+    callback.add(fn2)
+    callback.fire('呵呵哒')
+    callback.add(fn3)
     // 默认情况下
    /*  var callback = $.Callbacks()
     callback.add(fn1)
@@ -46,7 +61,7 @@
     memoryCallback.add(fn1)
     memoryCallback.fire('foo memory')
     memoryCallback.add(fn2)
-    memoryCallback.fire('bar memory') */
+    memoryCallback.fire('bar memory') 
 
     function fn3 (val) {
       console.log(`fn3，${val}`)
@@ -78,7 +93,7 @@
     uniqueCallback.fire('foobar unique') */
 
     // unique memory
-    var uniMemoryCallback = $.Callbacks('unique memory')
+    /*var uniMemoryCallback = $.Callbacks('unique memory')
     uniMemoryCallback.add(fn1)
     uniMemoryCallback.fire('foo uniMemory')
     uniMemoryCallback.add(fn1) // 重复添加
@@ -87,7 +102,7 @@
     uniMemoryCallback.add(fn2) // 重复添加
     uniMemoryCallback.fire('baz uniMemory')
     uniMemoryCallback.remove(fn2)
-    uniMemoryCallback.fire('foobar uniMemory')
+    uniMemoryCallback.fire('foobar uniMemory')*/
   </script>
 </body>
 </html>
