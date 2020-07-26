@@ -17,29 +17,30 @@
 </head>
 <body>
   <ul>
-    <li>实现顺序调用回调函数</li>
-    <li>实现stopOnFalse</li>
-    <li>实现memory</li>
-    <li>实现组合效果，如once memory</li>
+    <li>没有参数的情况下，每次执行fire都会从头到尾执行一次回调列表</li>
+    <li>参数为stopOnFalse时，遇到第一个回调函数返回false，则停止后面回调函数的执行</li>
+    <li>参数为memory时，只要add新的回调函数，会立即执行</li>
+    <li>参数为once时，只会执行第一个fire()</li>
   </ul>
   <script src="../libs/jquery.js"></script>
   <!-- <script src="jquery.diy.js"></script> -->
   <script>
     function fn1 (value) {
       console.log('fn1 says:', value)
-      return false
     }
     function fn2 (value) {
       console.log('fn2 says:', value)
+      return false
     }
     function fn3 (value) {
       console.log('fn3 says:', value)
     }
-    var callback = $.Callbacks('memory')
+    var callback = $.Callbacks('stopOnFalse')
     callback.add(fn1)
     callback.add(fn2)
     callback.fire('呵呵哒')
     callback.add(fn3)
+    callback.fire('测试once')
     // 默认情况下
    /*  var callback = $.Callbacks()
     callback.add(fn1)

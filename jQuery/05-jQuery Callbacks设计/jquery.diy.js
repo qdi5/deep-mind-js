@@ -215,17 +215,19 @@
       var length = target.length
       // 我这里的判断是以数组和对象来判断，
       // max使用的是context来判断，感觉都差不多???
-      if (jQuery.isUndefined(length) && jQuery.isNumber(length)) {
-        // 数组的情况
-        if (context) {
-          for (var i = 0; i < length; i++) {
-            var current = target[i]
-            fn.apply(current, context)
-          }
-        } else {
-          for (var i = 0; i < length; i++) {
-            var current = target[i]
-            fn.call(current, i, current)
+      if (!jQuery.isUndefined(length)) {
+        if (jQuery.isNumber(length)) {
+          // 数组的情况
+          if (context) {
+            for (var i = 0; i < length; i++) {
+              var current = target[i]
+              fn.apply(current, context)
+            }
+          } else {
+            for (var i = 0; i < length; i++) {
+              var current = target[i]
+              fn.call(current, i, current)
+            }
           }
         }
       } else {
@@ -330,22 +332,36 @@
     },
     Callbacks: function (options) {
       // 传入的options不为空且是字符串，则从对象缓存中获取对应的值，或者创建一个
+      debugger
       options = jQuery.isString(options) ? (optionsCache[options] || createOptions(options)) : {}
+      // 回调函数列表
       let list = []
-      function fire () {
+      // 起使索引
+      let start = 0
+      // 当前索引
+      let currentIndex = 0
+      // 结束索引
+      let end = 0
+      // 是否执行过一次fire方法
+      let isFired = false
+      /* memory的两个作用：
+      1、避免在memory模式下，fire方法第一次执行前，调用add方法会立即调用当前的回调函数；
+      2、在memory模式下，将fire()携带的参数通过memory变量传递给add方法；
+      */
+      let memory 
+      function fire (data) {
+        // debugger
         let args = arguments
-        let start = 0
-        let end = list.length
-        /* 
-          使用forEach的缺点：
-          1、不好控制循环退出
-          2、无法设置循环开始的位置
-        list.forEach(function (i, fn) {
-          fn.apply(_this, args)
-        })
-        */
-        for (; start < end; start++) {
-          if (list[start].apply(this, args) === false && options.stopOnFalse === true) {
+        end = list.length
+        currentIndex = start || 0
+        // 重置起始索引（主要为了在没参数的时候，能从头执行回调列表）
+        start = 0
+        isFired = true
+        /* 这句代码是精华，避免在memory模式时，add时立即执行回调函数时无法传参;
+        这里巧妙的将之前调用fire方法的参数，赋值给了memory */
+        memory = options.memory && data 
+        for (; currentIndex < end; currentIndex++) {
+          if (list[currentIndex].apply(data[0], data[1]) === false && options.stopOnFalse === true) {
             break
           }
         }
@@ -359,14 +375,29 @@
               list.push(fn)
             }
           })
-          if (options.memory) {
+         // 在memory模式下，如果从未执行fire()方法，则add不应该立即执行
+         /*  if (options.memory) {
             start = startLength
-            fire()
+            fire() // 如果没有memory变量，这种调用方式无法传递参数
+          } */
+          if (memory) {
+            start = startLength
+            fire(memory)
+          }
+        },
+        // 给list回调列表中的callback 指定上下文对象
+        fireWith (context, args) {
+          args = [context, args]
+          /* 当不是once的时候，可以随意执行fire方法
+          当是once的时候，只有从未执行过fire()方法，才能去调用fire() */
+          if (!options.once || !isFired) {
+            fire(args)
           }
         },
         // 发布者
         fire () {
-          fire()
+          self.fireWith(this, arguments)
+          return this         
         }
       }
       return self

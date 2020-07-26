@@ -17,6 +17,12 @@
 </head>
 <body>
   <p>实现Callback的add(), fire()方法，以及回调列表的三种状态：once，memory, stopOnFalse</p>
+  <ul>
+   <li>没有参数的情况下，每次执行fire都会从头到尾执行一次回调列表</li>
+   <li>参数为stopOnFalse时，遇到第一个回调函数返回false，则停止后面回调函数的执行；再次执行fire()会继续执行后面新加入的回调</li>
+   <li>参数为memory时，只要add新的回调函数，会立即执行</li>
+   <li>参数为once时，只会执行第一个fire()</li>
+  </ul>
   <script src="jquery.diy.js"></script>
   <script>
     function fn1 (value) {
@@ -24,12 +30,20 @@
     }
     function fn2 (value) {
       console.log('fn2 says:' + value)
+      return false
     }
-    // 默认情况下
-    var callback = $.Callbacks()
+    function fn3 (value) {
+      console.log('fn3 says:' + value)
+    }
+
+    // var callback = $.Callbacks()
+    // var callback = $.Callbacks('once')
+    // var callback = $.Callbacks('stopOnFalse')
+    var callback = $.Callbacks('memory')
     callback.add(fn1)
-    callback.fire('魔童')
     callback.add(fn2)
+    callback.fire('魔童')
+    callback.add(fn3)
     callback.fire('敖丙')
 
     // once
