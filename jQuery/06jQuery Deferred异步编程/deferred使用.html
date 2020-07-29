@@ -19,13 +19,20 @@
       setTimeout(test, 5000)
       return der
     }
-    $.when(wait(der)).done(function() {
+
+    $.when($.get(baseUrl + url), $.get(baseUrl + '/article/types')).done(function(d2, d3) {
       console.log('执行成功')
+      console.log(d2, d3)
     }).fail(function () {
       console.log('执行失败')
-    }).done(function() {
+    }).done(function(d2, d3) {
       console.log('执行还是成功')
+      console.log(d2, d3)
     })
+
+    $.when( { testing: 123 } ).done(
+      function(x) { alert(x.testing); }
+    );
   </script>
 </body>
 </html>

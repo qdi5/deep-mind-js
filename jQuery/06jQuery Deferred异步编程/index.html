@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title></title>
+</head>
+<body>
+  <script src="./jquery.diy.js"></script>
+  <script>
+    var der = $.Deferred()
+    var wait = function (der) {
+      var test = function () {
+        console.log('执行wait下的test方法了')
+        der.reject()
+      }
+      setTimeout(test, 5000)
+      return der
+    }
+
+    $.when(wait(der)).done(function() {
+      console.log('执行成功01')
+    }).fail(function() {
+      console.log('执行失败')
+    }).done(function() {
+      console.log('执行成功02')
+    })
+
+  </script>
+</body>
+</html>
