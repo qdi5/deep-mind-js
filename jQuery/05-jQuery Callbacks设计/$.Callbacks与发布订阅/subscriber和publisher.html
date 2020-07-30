@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>$.Callbacks与发布订阅</title>
+</head>
+<body>
+  <script src="../../libs/jquery1.7.1.js"></script>
+  <script>
+    var topics = {}
+    jQuery.Topic = function (id) {
+      var callbacks,
+        method,
+        topic = id && topics[id]
+      if (!topic) {
+        callbacks = jQuery.Callbacks()
+        topic = {
+          publish: callbacks.fire,
+          subscribe: callbacks.add,
+          unsubscribe: callbacks.remove
+        }
+      }
+      if (id) {
+        topics[id] = topic
+      }
+      return topic
+    }
+    function fn1( value ) {
+      console.log( 'fn1 says：' + value );
+      return false;
+    }
+  
+    function fn2( value ) {
+        fn1( "fn2 says: " + value );
+        return false;
+    }
+
+    // 给指定的主题mailArrived添加订阅者
+   /*  $.Topic('mailArrived').subscribe(fn1)
+    $.Topic('mailArrived').subscribe(fn2)
+    $.Topic('mailSent').subscribe(fn1)
+
+    $.Topic('mailArrived').publish('hello world')
+    $.Topic('mailSent').publish('woo!mail')
+ */
+    // 报刊亭 报纸  人
+    // rss网站 邮件 人
+    // 卫星  飞机 地面基地
+    // 群发消息？属于主动推送，只有publish，没有订阅？
+
+    // 订阅mailArrived通知
+    $.Topic('mailArrived').subscribe(fn1)
+    
+    var dfd = $.Deferred()
+    // 定义一个新的topic（没有直接publish）
+    var topic = $.Topic('mailArrived')
+    /*
+      当deferred已经resolved后，发布一个通知给订阅者
+      
+      */
+    dfd.done(topic.publish)
+    /* 一个deferred携带一个消息被resolved后，将会传递给订阅者；
+      很容易集成到一个复杂的程序中（比如等待一个ajax调用的完成）
+      以便消息只能被发布一次，一旦任务完全完成后。
+    */
+    dfd.resolve("it's been published")
+</script>
+</body>
+</html>
