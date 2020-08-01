@@ -9,6 +9,7 @@
   <script src="../../libs/jquery1.7.1.js"></script>
   <script>
     var topics = {}
+    // 报刊亭（可以订阅的主题）
     jQuery.Topic = function (id) {
       var callbacks,
         method,
@@ -26,6 +27,7 @@
       }
       return topic
     }
+    
     function fn1( value ) {
       console.log( 'fn1 says：' + value );
       return false;
@@ -40,7 +42,6 @@
    /*  $.Topic('mailArrived').subscribe(fn1)
     $.Topic('mailArrived').subscribe(fn2)
     $.Topic('mailSent').subscribe(fn1)
-
     $.Topic('mailArrived').publish('hello world')
     $.Topic('mailSent').publish('woo!mail')
  */

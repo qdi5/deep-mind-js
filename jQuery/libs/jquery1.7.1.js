@@ -1021,7 +1021,7 @@ jQuery.Callbacks = function( flags ) {
 				type,
 				actual;
 			for ( i = 0, length = args.length; i < length; i++ ) {
-				elem = args[ i ];
+				elem = args[ i ];    
 				type = jQuery.type( elem );
 				if ( type === "array" ) {
 					// Inspect recursively
