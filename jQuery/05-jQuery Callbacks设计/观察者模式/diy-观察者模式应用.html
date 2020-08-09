@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>观察者模式</title>
+  <style>
+    *,*:before,*:after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    .container {
+      max-width: 50em;
+      margin: auto;
+    }
+    .message-wrapper {
+      width: 100%;
+      min-height: 20em;
+      max-height: 50em;
+      margin: auto;
+      border-radius: 1em;
+      border: 1px solid #333;
+    }
+  </style>
+</head>
+<body>
+  <!--留言区-->
+  <div class="container">
+    <div id="msg" class="message-wrapper"></div>
+    <div id="msgNum" class="msg-num">0</div>
+    <input type="text" id="userInput"><button id="submit">提交</button>
+  </div>
+  
+  <script>
+    // 实现观察者
+    var observer = (function () {
+      // 存储回调的对象
+      var message = {}
+      var observer = {
+        // 添加订阅者
+        add (type, fn) {
+          
+          if (!message[type]) {
+            if (typeof fn === 'function') {
+              message[type] = [fn]
+            }
+          } else {
+            message[type].push(fn)
+          }
+          return this
+        },
+        // 发布
+        fire (type, args) {
+          var cbs = message[type]
+          if (!cbs) return
+          var length = cbs.length
+          var i = 0
+          var events = {
+            type,
+            args
+          }
+          for (; i < length; i++) {
+            cbs[i] && cbs[i].call(this, events)
+          }
+        },
+        // 移除指定的订阅者
+        remove (type, fn) {
+          if (message[type] instanceof Array) {
+            message[type].forEach((element, index) => {
+              element === fn && message[type].splice(index, 1)
+            })
+          } 
+        }
+      }
+      return observer
+    })()
+
+   /*  observer.add('wuzhe', function(e) {
+      console.log('wuzhe', this, e.args)
+    })
+    observer.add('wufan', function () {
+      console.log('wufan')
+    })
+    observer.fire('wuzhe',{msg: '传递参数'})
+    observer.remove('wuzhe')
+    observer.fire('wuzhe') */
+  </script>
+  <script>
+    // 添加一条留言
+    void (function() {
+      function addMessage (obj) {
+        debugger
+        var text = obj.args.text
+        var div = document.createElement('div')
+        div.textContent = text
+        var span = document.createElement('span')
+        span.textContent = '删除'
+        div.appendChild(span)
+        span.onclick = function () {
+          this.parentNode.parentNode.removeChild(div)
+          observer.fire('removeCommentMessage', {
+            num: -1
+          })
+        }
+        msg.appendChild(div)
+      }
+      observer.add('addCommentMessage', addMessage)
+    })()
+
+    // 更改用户消息数目
+    void (function() {
+      function changeNum(obj) {
+        debugger
+        msgNum.textContent = Number(msgNum.textContent) + obj.args.num
+      }
+      observer.add('addCommentMessage', changeNum).add('removeCommentMessage', changeNum)
+    })()
+
+    // 点击提交按钮
+    void (function() {
+      submit.onclick = function() {
+        var val = userInput.value
+        if (val.trim()) {
+          observer.fire('addCommentMessage', {
+            text: val,
+            num: 1
+          })
+          observer.fire('clear',userInput)
+        }
+      }
+    })()
+
+    // 清除input
+    void (function() {
+      function clear(obj) {
+        debugger
+        obj.args.value = ''
+      }
+      observer.add('clear', clear)
+    })()
+  </script>
+</body>
+</html>
