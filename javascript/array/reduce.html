@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>reduce方法</title>
+</head>
+<body>
+  <script>
+    /** 
+
+    */
+    [1,2,3,4,5,6].reduce(async (lastPromise, cur, idx, src) => {
+      /*  
+        lastPromise是上一次返回的Promise对象；
+        i是当前循环的值；
+      */
+      console.log(lastPromise, cur)
+      try {
+        await lastPromise
+        console.log(await asyncF())
+      } catch(e) {
+        console.error(e)
+      }
+    }, Promise.resolve())
+
+    function asyncF () {
+      return Promise.resolve(window.a ? ++window.a : window.a = 1)
+    }
+
+    var maxCallback = (acc, cur) => { 
+      console.log(acc.x, cur.x)
+      return Math.max(acc.x, cur.x) 
+    }
+    var maxCallback2 = (max, cur) => Math.max(max, cur)
+
+    // 第二次执行回调的时候，acc是22，所以acc.x是undefined
+    console.log([{x: 2}, {x: 22}, {x: 42}].reduce(maxCallback))
+
+   /*  console.log([1,2,3,4,5,6].reduce((lastPromise, i) => {
+      return lastPromise + i
+    }, 100)) */
+  </script>
+</body>
+</html>
